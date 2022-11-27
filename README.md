@@ -1,2 +1,2 @@
-# digital_petpass_owner_service
+# Digital Petpass Owner Registration
 Handles the owner registration service
