@@ -1,12 +1,12 @@
 import { iDataDTO } from "../models/iDataDTO";
 import dotenv from "dotenv";
-import { iAuthService } from "../models/iAuthService";
-import { iUserID } from "../models/iUserIDDTO";
-import mysql from "mysql";
+import { iAuthServiceAdapter } from "../models/iAuthService";
+import { iUserIDDTO } from "../models/iUserIDDTO";
+import mysql, { Connection } from "mysql";
 
 dotenv.config();
 
-class authService implements iAuthService {
+class authMysqlService implements iAuthServiceAdapter {
     private host: string | undefined;
     private user: string | undefined;
     private password: string | undefined;
@@ -23,7 +23,7 @@ class authService implements iAuthService {
      * Create a mysql connection
      * @returns any
      */
-    config(): any
+    private config(): Connection
     {
         return mysql.createConnection({
             host: this.host,
@@ -38,7 +38,6 @@ class authService implements iAuthService {
      * @param email 
      * @param callback 
      */
-
     getUserID(email: string, callback: any): void
     {
         try {
@@ -46,7 +45,7 @@ class authService implements iAuthService {
             con.connect();
 
             const sqlString = "SELECT id as user_id FROM owners WHERE email = ?";
-            con.query(sqlString, [email], (err: any, results: iUserID[]) => {
+            con.query(sqlString, [email], (err: any, results: iUserIDDTO[]) => {
                 if (err) {
                     console.error("I have errors:", err);
                 }
@@ -63,14 +62,13 @@ class authService implements iAuthService {
      * @param data
      * @param callback 
      */
-    
     register(data: iDataDTO, callback: any): void
     {
         try {
             const con = this.config();
             con.connect();
             const sqlString = 'INSERT INTO owners (firstName, lastName, email, phone) VALUES (?,?,?,?)';
-            con.query(sqlString, [data.firstName, data.lastName, data.email, data.phone], (err: any, result: any) => {
+            con.query(sqlString, [data.firstName, data.lastName, data.email, data.phone], (err: any, result: iUserIDDTO) => {
                 if (err) {
                     console.log(err);
                 }
@@ -79,9 +77,8 @@ class authService implements iAuthService {
             con.end();
         } catch (err) {
             console.error(err);
-        }
-        
+        }   
     }
 }
 
-export default authService;
+export default authMysqlService;
