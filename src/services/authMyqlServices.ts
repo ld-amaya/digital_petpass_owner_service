@@ -47,13 +47,13 @@ class authMysqlService implements iAuthServiceAdapter {
             const sqlString = "SELECT id as user_id FROM owners WHERE email = ?";
             con.query(sqlString, [email], (err: any, results: iUserIDDTO[]) => {
                 if (err) {
-                    console.error("I have errors:", err);
+                    throw new Error(err);
                 }
                 callback(results[0]);
             });
             con.end();   
-        } catch (err) {
-            console.error(err);
+        } catch (err: any) {
+            throw new Error(err);
         }
     }
 
@@ -70,13 +70,13 @@ class authMysqlService implements iAuthServiceAdapter {
             const sqlString = 'INSERT INTO owners (firstName, lastName, email, phone) VALUES (?,?,?,?)';
             con.query(sqlString, [data.firstName, data.lastName, data.email, data.phone], (err: any, result: iUserIDDTO) => {
                 if (err) {
-                    console.log(err);
+                    throw new Error(err);
                 }
                 callback({ user_id: result.insertId });
             });
             con.end();
-        } catch (err) {
-            console.error(err);
+        } catch (err: any) {
+            throw new Error(err);
         }   
     }
 }
