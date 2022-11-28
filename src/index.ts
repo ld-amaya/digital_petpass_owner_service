@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from "dotenv";
 import { iDataDTO } from './models/iDataDTO';
 import authController from './controllers/authController';
-import { iUserID } from './models/iUserIDDTO';
+import { iUserIDDTO } from './models/iUserIDDTO';
 
 dotenv.config();
 
@@ -20,7 +20,7 @@ app.use(cors());
 app.post("/register", async (req, res) => {
     const user: iDataDTO = req.body;
     const controller = new authController();
-    await controller.register(user, (results: iUserID) => {
+    await controller.register(user, (results: iUserIDDTO) => {
         res.send(results);    
     });
 });

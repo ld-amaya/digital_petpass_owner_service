@@ -1,12 +1,12 @@
 import { iDataDTO } from "../models/iDataDTO";
-import { iUserID } from "../models/iUserIDDTO";
-import authService from "../services/authServices";
+import { iUserIDDTO } from "../models/iUserIDDTO";
+import authMysqlService from "../services/authMyqlServices";
 
 class authController {
     private authServices;
 
     constructor() {
-        this.authServices = new authService();
+        this.authServices = new authMysqlService();
     }
 
     /**
@@ -16,11 +16,11 @@ class authController {
      */
     register(data: iDataDTO, callback: any): void
     {
-        this.authServices.getUserID(data.email, (results: iUserID) => {
+        this.authServices.getUserID(data.email, (results: iUserIDDTO) => {
             if (results) {
                 callback(results);
             } else {
-                this.authServices.register(data, (results: iUserID) => {
+                this.authServices.register(data, (results: iUserIDDTO) => {
                     if (results) {
                         callback(results);
                     }
